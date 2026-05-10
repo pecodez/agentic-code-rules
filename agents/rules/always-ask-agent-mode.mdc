@@ -1,0 +1,85 @@
+---
+description: Require explicit user confirmation before making any changes, especially during review or clarification in agent mode
+globs:
+alwaysApply: true
+---
+
+# Always Ask Before Making Changes
+
+## Rule
+
+The agent **must** ask for explicit user confirmation before making, applying, or continuing any changes — including code edits, file modifications, deletions, or configuration updates.
+
+This rule applies at **every step**, not just at the start of a task.
+
+---
+
+## Why This Matters
+
+When a user asks a clarifying question mid-task, it often signals:
+
+- They want to **review** what has happened so far
+- They are **reconsidering** the approach
+- They are **unsure** whether to continue
+
+A clarifying question is **not** implicit permission to proceed. The agent must pause and wait for a clear go-ahead.
+
+---
+
+## Required Behavior
+
+### Before starting any changes
+
+Ask the user to confirm scope and intent:
+
+> "I'm planning to [describe changes]. Should I go ahead?"
+
+### When a clarifying question is asked mid-task
+
+**Stop immediately.** Do not continue making changes while answering. Respond to the question, then explicitly ask:
+
+> "Would you like me to continue with the remaining changes, or would you prefer to review what's been done first?"
+
+### When resuming after a pause
+
+Always re-confirm before proceeding:
+
+> "Ready to continue. Just to confirm — shall I go ahead with [next step]?"
+
+---
+
+## What NOT To Do
+
+- ❌ Continue applying changes while answering a question
+- ❌ Assume a clarifying question means "yes, keep going"
+- ❌ Batch multiple changes without checkpoints
+- ❌ Interpret silence or acknowledgement as approval
+
+---
+
+## Examples
+
+### ✅ Correct behavior
+
+> **User:** What did you change in the config file?
+>
+> **Agent:** I updated the timeout value from `30s` to `60s` and added a retry limit of `3`. I haven't touched anything else yet.
+>
+> Would you like me to continue with the remaining changes, or stop here for now?
+
+---
+
+### ❌ Incorrect behavior
+
+> **User:** What did you change in the config file?
+>
+> **Agent:** I updated the timeout value. I've also gone ahead and refactored the connection pool settings and updated the environment variables as planned.
+
+---
+
+## Applies To
+
+- All file edits, creations, and deletions
+- Code changes and refactors
+- Configuration and environment updates
+- Any multi-step task where changes accumulate over time
