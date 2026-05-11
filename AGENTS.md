@@ -86,18 +86,4 @@ PROJECTS="~/code/proj1 ~/code/proj2" \
 - **Idempotent operations**: The `relink()` function ensures re-running is safe — it removes and recreates symlinks.
 - **Rule file format**: Rules use `.md` or `.mdc` extension with YAML frontmatter (`description`, `globs`, `alwaysApply` fields). The installer handles both extensions.
 
-## Existing Rules
 
-### `always-ask-agent-mode`
-Requires the agent to ask for explicit user confirmation before making any changes. Applies at every step, not just at the start of a task. Prevents the agent from interpreting clarifying questions as permission to proceed.
-
-### `confidence-rating`
-Mandates a structured confidence footer on every response with a percentage rating (High/Medium/Low/Uncertain), justification, and sources. Defines mode-specific requirements for Ask, Plan, and Agent modes.
-
-## Gotchas
-
-- **Symlinks, not copies**: Target projects contain symlinks back to this repo. Editing files in a target project's `.claude/` or `.cursor/rules/` modifies the source here.
-- **Re-run after changes**: After adding/modifying rules or skills, the installer must be re-run on each target project.
-- **No skills yet**: The `agents/skills/` directory doesn't exist yet. The installer warns but continues gracefully.
-- **Single commit history**: The repo is shallow-cloned (`--depth 1`) by default, so full history isn't available in installed copies.
-- **POSIX sh only**: The install script must remain compatible with `/bin/sh` — no Bash-isms.
