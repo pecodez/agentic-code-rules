@@ -4,22 +4,11 @@ A curated collection of AI agent rules and skills for [Claude Code](https://docs
 
 Rules are defined once and symlinked into your projects. Both agents pick them up automatically through their native conventions — no manual copying.
 
-## Usage options
+## Getting started
 
-### 1. Use the installer (recommended)
+### 1. Fork and customise (recommended)
 
-The installer clones this repository to a local directory and creates symlinks into your projects:
-
-```sh
-curl -fsSL https://raw.githubusercontent.com/pecodez/agent-rules/main/install.sh \
-  | sh -s -- ~/code/project-a ~/code/project-b
-```
-
-You get the rules from this repo, applied consistently across all listed projects. Re-run the same command to pull updates and reapply.
-
-### 2. Fork and customise
-
-Fork this repository, add your own rules and skills to `agents/rules/` and `agents/skills/`, then point the installer at your fork:
+Fork this repository, add your own rules and skills to `agents/rules/` and `agents/skills/`, then use the installer to symlink them into your projects:
 
 ```sh
 REPO_URL="https://github.com/yourname/agent-rules.git" \
@@ -29,9 +18,7 @@ REPO_URL="https://github.com/yourname/agent-rules.git" \
 
 To pull in upstream changes later, merge from the original repo into your fork using standard git workflow.
 
-This is the recommended approach if you want to maintain your own rules alongside the ones provided here.
-
-### 3. Download and manage manually
+### 2. Download and manage manually
 
 Browse the [`agents/rules/`](agents/rules) directory, download the files you want, and place them directly into your project's `.claude/rules/` or `.cursor/rules/` directory. No installer needed — but no automated updates either.
 
