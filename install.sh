@@ -16,18 +16,18 @@
 # projects share one source of truth — pull the repo to update everywhere.
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/USER/REPO/main/install.sh \
+#   curl -fsSL https://raw.githubusercontent.com/pecodez/agent-rules/main/install.sh \
 #     | sh -s -- ~/code/proj1 ~/code/proj2
 #
 #   # or via env var
 #   PROJECTS="~/code/proj1 ~/code/proj2" \
-#     curl -fsSL https://raw.githubusercontent.com/USER/REPO/main/install.sh | sh
+#     curl -fsSL https://raw.githubusercontent.com/pecodez/agent-rules/main/install.sh | sh
 
 set -eu
 
 # ---- Configuration -------------------------------------------------------
 # EDIT THIS to point at your repo (or override via env var at install time).
-REPO_URL="${REPO_URL:-https://github.com/USER/REPO.git}"
+REPO_URL="${REPO_URL:-https://github.com/pecodez/agent-rules.git}"
 REPO_BRANCH="${REPO_BRANCH:-main}"
 REPO_TARBALL="${REPO_TARBALL:-${REPO_URL%.git}/archive/refs/heads/${REPO_BRANCH}.tar.gz}"
 INSTALL_DIR="${INSTALL_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/agent-rules}"
