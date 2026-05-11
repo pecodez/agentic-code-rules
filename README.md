@@ -1,27 +1,58 @@
 # agent-rules
 
-Shared AI agent rules and skills for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) and [Cursor](https://cursor.com), managed from a single repository and symlinked into your projects.
+A curated collection of AI agent rules and skills for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) and [Cursor](https://cursor.com).
 
-Define your rules once, install them everywhere. When you update the repo, every project gets the latest rules automatically — no copying files around.
+Rules are defined once and symlinked into your projects. Both agents pick them up automatically through their native conventions — no manual copying.
+
+## Usage options
+
+### 1. Use the installer (recommended)
+
+The installer clones this repository to a local directory and creates symlinks into your projects:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/pecodez/agent-rules/main/install.sh \
+  | sh -s -- ~/code/project-a ~/code/project-b
+```
+
+You get the rules from this repo, applied consistently across all listed projects. Re-run the same command to pull updates and reapply.
+
+### 2. Fork and customise
+
+Fork this repository, add your own rules and skills to `agents/rules/` and `agents/skills/`, then point the installer at your fork:
+
+```sh
+REPO_URL="https://github.com/yourname/agent-rules.git" \
+  curl -fsSL https://raw.githubusercontent.com/yourname/agent-rules/main/install.sh \
+  | sh -s -- ~/code/project-a ~/code/project-b
+```
+
+To pull in upstream changes later, merge from the original repo into your fork using standard git workflow.
+
+This is the recommended approach if you want to maintain your own rules alongside the ones provided here.
+
+### 3. Download and manage manually
+
+Browse the [`agents/rules/`](agents/rules) directory, download the files you want, and place them directly into your project's `.claude/rules/` or `.cursor/rules/` directory. No installer needed — but no automated updates either.
+
+> **Do not add custom rules to `~/.local/share/agent-rules/`.** The installer runs `git reset --hard` on updates, which will delete any local additions.
 
 ## How it works
 
-The installer clones this repository to a local directory (`~/.local/share/agent-rules` by default) and creates symlinks from each target project into that shared copy. Both Claude Code and Cursor pick up the rules natively through their standard conventions:
+The installer clones this repository to `~/.local/share/agent-rules` (configurable) and creates symlinks from each target project into that shared copy:
 
-| Agent | Symlink target | Behavior |
+| Agent | Symlink target | Behaviour |
 |---|---|---|
 | **Claude Code** | `.claude/rules/<name>.md` | Auto-loaded into every session |
 | **Cursor** | `.cursor/rules/<name>.mdc` | Applied as project rules (`alwaysApply` via frontmatter) |
 
 Skills (multi-file directories) are symlinked to both `.claude/skills/<name>/` and `.cursor/skills/<name>/`, following the [Agent Skills](https://agentskills.io) open standard.
 
-Because all projects point back to the same source, editing a rule in any project's `.claude/rules/` or `.cursor/rules/` modifies the shared copy.
+All symlinks point back to the shared copy. Editing a rule inside a target project modifies the source — this is by design.
 
 ## Installation
 
 ### Quick start
-
-Install rules into one or more project directories:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/pecodez/agent-rules/main/install.sh \
@@ -38,28 +69,20 @@ PROJECTS="~/code/project-a ~/code/project-b" \
 ### Prerequisites
 
 - **git** (preferred) — the installer clones the repo with `--depth 1`
-- **curl + tar** (fallback) — used if git is not available
+- **curl + tar** (fallback) — used automatically if git is not available
 
 ## Configuration
 
-All configuration is done through environment variables. Set them before running the installer to override defaults.
+All configuration is via environment variables, set before running the installer.
 
 | Variable | Default | Description |
 |---|---|---|
 | `REPO_URL` | `https://github.com/pecodez/agent-rules.git` | Git URL of the rules repository |
 | `REPO_BRANCH` | `main` | Branch to install |
-| `INSTALL_DIR` | `~/.local/share/agent-rules` | Where the shared copy of the repo is stored |
-| `PROJECTS` | *(none)* | Space-separated list of project directories (alternative to passing them as arguments) |
+| `INSTALL_DIR` | `~/.local/share/agent-rules` | Where the shared copy is stored locally |
+| `PROJECTS` | *(none)* | Space-separated list of project directories (alternative to passing as arguments) |
 
 ### Examples
-
-Install from a fork:
-
-```sh
-REPO_URL="https://github.com/yourname/agent-rules.git" \
-  curl -fsSL https://raw.githubusercontent.com/yourname/agent-rules/main/install.sh \
-  | sh -s -- ~/code/my-project
-```
 
 Use a custom local directory:
 
@@ -69,7 +92,7 @@ INSTALL_DIR="$HOME/.agent-rules" \
   | sh -s -- ~/code/my-project
 ```
 
-Install from a feature branch:
+Install from a specific branch:
 
 ```sh
 REPO_BRANCH="experimental" \
@@ -79,17 +102,15 @@ REPO_BRANCH="experimental" \
 
 ## Updating
 
-Re-run the same install command. The installer is idempotent:
+Re-run the install command. There is no separate update step — installing and updating are the same operation.
 
-1. If the shared copy already exists, it pulls the latest changes (`git fetch` + `git reset --hard`)
-2. Symlinks are removed and recreated, picking up any new or renamed rules
+1. The installer pulls the latest changes from the configured repo (`git fetch` + `git reset --hard`)
+2. Symlinks are removed and recreated, picking up any new, renamed, or deleted rules
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/pecodez/agent-rules/main/install.sh \
   | sh -s -- ~/code/project-a ~/code/project-b
 ```
-
-There is no separate update command — installing and updating are the same operation.
 
 ## What gets installed
 
@@ -133,23 +154,25 @@ LICENSE               MIT
 README.md             this file
 ```
 
-## Adding your own rules
+## Adding rules and skills (fork workflow)
 
-1. Create a new `.mdc` file in `agents/rules/`:
+After forking this repo, you can add your own rules and skills.
 
-   ```yaml
-   ---
-   description: Brief description of what the rule does
-   globs:
-   alwaysApply: true
-   ---
-   ```
+### Rules
 
-2. Write the rule content in markdown below the frontmatter.
+Create a new `.mdc` file in `agents/rules/`:
 
-3. Re-run the installer on your projects to pick up the new rule.
+```yaml
+---
+description: Brief description of what the rule does
+globs:
+alwaysApply: true
+---
+```
 
-## Adding skills
+Write the rule content in markdown below the frontmatter, then re-run the installer on your projects.
+
+### Skills
 
 1. Create a directory under `agents/skills/<skill-name>/`.
 2. Add a `SKILL.md` file (required).
@@ -160,8 +183,9 @@ Both Claude Code and Cursor get the full skill directory at `.claude/skills/<nam
 
 ## Important notes
 
-- **Symlinks, not copies.** Editing a rule file inside a target project modifies the shared source. This is by design — it keeps everything in sync.
-- **Re-run after changes.** After adding, renaming, or removing rules, re-run the installer on each target project.
+- **Symlinks, not copies.** Editing a rule inside a target project modifies the shared source.
+- **Re-run after changes.** After adding, renaming, or removing rules in your fork, re-run the installer on each target project.
+- **Updates are destructive to local changes.** The installer runs `git reset --hard` when updating, so any files added directly to the local install directory will be lost. Use a fork to maintain custom rules.
 - **POSIX sh.** The installer is written for `/bin/sh` compatibility. No Bash required.
 - **Shallow clone.** The repo is cloned with `--depth 1` by default, so full git history is not available in the local copy.
 - **`.gitignore` the symlinks.** You may want to add `.claude/` and `.cursor/rules/` to your project's `.gitignore` so the symlinks aren't committed.
