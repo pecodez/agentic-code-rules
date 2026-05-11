@@ -24,7 +24,7 @@ LICENSE
 ### Key Concepts
 
 - **Rules** (`agents/rules/*.md` or `*.mdc`): Flat markdown files defining agent behavior. Each becomes both a Claude Code auto-loaded rule and a Cursor project rule.
-- **Skills** (`agents/skills/<name>/`): Directories containing a `SKILL.md` plus optional supporting files. Symlinked as Claude Code skills; the `SKILL.md` is exposed as a Cursor rule.
+- **Skills** (`agents/skills/<name>/`): Directories containing a `SKILL.md` plus optional supporting files. Symlinked as skills for both Claude Code and Cursor.
 
 ## Installation & Usage
 
@@ -54,8 +54,7 @@ PROJECTS="~/code/proj1 ~/code/proj2" \
 2. For each target project directory:
    - Creates `.claude/rules/`, `.claude/skills/`, `.cursor/rules/`, `.cursor/skills/`
    - Symlinks each `agents/rules/*.md` or `*.mdc` file → `.claude/rules/<name>.md` and `.cursor/rules/<name>.mdc`
-   - Symlinks each `agents/skills/<name>/` directory → `.claude/skills/<name>/`
-   - Symlinks each `agents/skills/<name>/SKILL.md` → `.cursor/rules/skill-<name>.mdc`
+   - Symlinks each `agents/skills/<name>/` directory → `.claude/skills/<name>/` and `.cursor/skills/<name>/`
 3. Uses the `relink()` helper for idempotent symlink creation (removes existing before creating)
 
 ## Adding New Rules

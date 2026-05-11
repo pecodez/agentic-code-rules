@@ -13,7 +13,7 @@ The installer clones this repository to a local directory (`~/.local/share/agent
 | **Claude Code** | `.claude/rules/<name>.md` | Auto-loaded into every session |
 | **Cursor** | `.cursor/rules/<name>.mdc` | Applied as project rules (`alwaysApply` via frontmatter) |
 
-Skills (multi-file directories) are symlinked to `.claude/skills/<name>/` for Claude Code. Cursor has no multi-file skill concept, so the skill's `SKILL.md` is exposed as a project rule instead.
+Skills (multi-file directories) are symlinked to both `.claude/skills/<name>/` and `.cursor/skills/<name>/`, following the [Agent Skills](https://agentskills.io) open standard.
 
 Because all projects point back to the same source, editing a rule in any project's `.claude/rules/` or `.cursor/rules/` modifies the shared copy.
 
@@ -106,9 +106,9 @@ your-project/
 └── .cursor/
     ├── rules/
     │   ├── always-ask-agent-mode.mdc → symlink
-    │   ├── confidence-rating.mdc     → symlink
-    │   └── skill-<name>.mdc          → symlink (if skills exist)
+    │   └── confidence-rating.mdc     → symlink
     └── skills/
+        └── <skill-name>/             → symlink (if skills exist)
 ```
 
 ## Included rules
@@ -156,7 +156,7 @@ README.md             this file
 3. Add any supporting files alongside it.
 4. Re-run the installer.
 
-Claude Code gets the full skill directory. Cursor sees `SKILL.md` as a project rule named `skill-<name>.mdc`.
+Both Claude Code and Cursor get the full skill directory at `.claude/skills/<name>/` and `.cursor/skills/<name>/` respectively.
 
 ## Important notes
 

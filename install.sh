@@ -10,7 +10,7 @@
 #   .claude/rules/<rule>.md            → symlink (Claude Code auto-loaded rule)
 #   .claude/skills/<skill>/            → symlink to the whole skill dir
 #   .cursor/rules/<rule>.mdc           → symlink (Cursor project rule)
-#   .cursor/rules/skill-<skill>.mdc    → symlink to the skill's SKILL.md
+#   .cursor/skills/<skill>/            → symlink to the whole skill dir
 #
 # The master copy is cloned/updated under ~/.local/share/agent-rules so all
 # projects share one source of truth — pull the repo to update everywhere.
@@ -134,12 +134,8 @@ install_to_project() {
             # Claude Code: full skill directory at .claude/skills/<name>/
             relink "$skill_path" "$abs_project/.claude/skills/$skill_name"
 
-            # Cursor has no multi-file skill concept; expose SKILL.md as a
-            # rule so the agent at least knows the skill exists.
-            if [ -f "$skill_path/SKILL.md" ]; then
-                relink "$skill_path/SKILL.md" \
-                       "$abs_project/.cursor/rules/skill-$skill_name.mdc"
-            fi
+            # Cursor: full skill directory at .cursor/skills/<name>/
+            relink "$skill_path" "$abs_project/.cursor/skills/$skill_name"
         done
     fi
 
