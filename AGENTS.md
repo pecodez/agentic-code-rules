@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**agent-rules** is a shared repository of AI agent rules and skills that get symlinked into multiple project directories. It provides a single source of truth for Cursor (`.cursor/rules/`) and Claude Code (`.claude/commands/`, `.claude/skills/`) agent configurations.
+**agent-rules** is a shared repository of AI agent rules and skills that get symlinked into multiple project directories. It provides a single source of truth for Cursor (`.cursor/rules/`) and Claude Code (`.claude/rules/`, `.claude/skills/`) agent configurations.
 
 Licensed under MIT. Author: Phil Ewington.
 
@@ -23,7 +23,7 @@ LICENSE
 
 ### Key Concepts
 
-- **Rules** (`agents/rules/*.md` or `*.mdc`): Flat markdown files defining agent behavior. Each becomes both a Claude Code slash command and a Cursor project rule.
+- **Rules** (`agents/rules/*.md` or `*.mdc`): Flat markdown files defining agent behavior. Each becomes both a Claude Code auto-loaded rule and a Cursor project rule.
 - **Skills** (`agents/skills/<name>/`): Directories containing a `SKILL.md` plus optional supporting files. Symlinked as Claude Code skills; the `SKILL.md` is exposed as a Cursor rule.
 
 ## Installation & Usage
@@ -52,8 +52,8 @@ PROJECTS="~/code/proj1 ~/code/proj2" \
 
 1. Fetches/updates the repo via `git clone` (preferred) or `curl + tar` (fallback)
 2. For each target project directory:
-   - Creates `.claude/commands/`, `.claude/skills/`, `.cursor/rules/`, `.cursor/skills/`
-   - Symlinks each `agents/rules/*.md` or `*.mdc` file → `.claude/commands/<name>.md` and `.cursor/rules/<name>.mdc`
+   - Creates `.claude/rules/`, `.claude/skills/`, `.cursor/rules/`, `.cursor/skills/`
+   - Symlinks each `agents/rules/*.md` or `*.mdc` file → `.claude/rules/<name>.md` and `.cursor/rules/<name>.mdc`
    - Symlinks each `agents/skills/<name>/` directory → `.claude/skills/<name>/`
    - Symlinks each `agents/skills/<name>/SKILL.md` → `.cursor/rules/skill-<name>.mdc`
 3. Uses the `relink()` helper for idempotent symlink creation (removes existing before creating)

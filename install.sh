@@ -7,7 +7,7 @@
 #   agents/skills/<skill>/...          (optional supporting files)
 #
 # What this does for every target project:
-#   .claude/commands/<rule>.md         → symlink (Claude Code slash command)
+#   .claude/rules/<rule>.md            → symlink (Claude Code auto-loaded rule)
 #   .claude/skills/<skill>/            → symlink to the whole skill dir
 #   .cursor/rules/<rule>.mdc           → symlink (Cursor project rule)
 #   .cursor/rules/skill-<skill>.mdc    → symlink to the skill's SKILL.md
@@ -105,7 +105,7 @@ install_to_project() {
     log "Installing into $abs_project"
 
     mkdir -p "$abs_project/.claude/skills"
-    mkdir -p "$abs_project/.claude/commands"
+    mkdir -p "$abs_project/.claude/rules"
     mkdir -p "$abs_project/.cursor/rules"
     mkdir -p "$abs_project/.cursor/skills"
 
@@ -117,8 +117,8 @@ install_to_project() {
             # Strip .mdc first, then .md, to get the bare name
             name="${base%.mdc}"
             name="${name%.md}"
-            # Claude Code slash command: invoke as /<name> (always .md)
-            relink "$rule" "$abs_project/.claude/commands/$name.md"
+            # Claude Code rule: auto-loaded into every session (always .md)
+            relink "$rule" "$abs_project/.claude/rules/$name.md"
             # Cursor project rule: lives in .cursor/rules/ (always .mdc)
             relink "$rule" "$abs_project/.cursor/rules/$name.mdc"
         done
